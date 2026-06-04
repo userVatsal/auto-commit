@@ -1,0 +1,26 @@
+name: 🟩 Daily Commit
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Every day at midnight UTC
+  workflow_dispatch:       # Allow manual trigger
+
+jobs:
+  daily-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Update log
+        run: |
+          echo "$(date '+%Y-%m-%d %H:%M:%S UTC') — staying green 🟩" >> log.txt
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add log.txt
+          git commit -m "🟩 daily commit — $(date '+%Y-%m-%d')"
+          git push
